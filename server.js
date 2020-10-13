@@ -19,11 +19,14 @@ io.on('connect', socket => {
 
     socket.on('user connected', user => {
         console.log(`${user} signed on.`)
+        socket.broadcast.emit('banner message', `${user} signed on.`);
     });
 
-    socket.on('user disconnected', user => {
-        console.log(`${user} signed off.`)
+    socket.on('user disconnect', user => {
+        console.log((`${user} signed off.`));
+        socket.broadcast.emit('banner message', `${user} signed off.`);
     });
+
 });
 
 httpServer.listen(3000, () => {

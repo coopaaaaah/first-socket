@@ -1,49 +1,55 @@
 <html>
     <head>
-        <title>
+        <title id="title">
             Minimal Socket Example
         </title>
-    </head>
-    <body>
-        <ul id="events"></ul>
-
-        <form id="myForm">
-            Enter message: <input id="message" type="text" />
-            <input type="submit">
-        </form>
-
-        <script src="/socket.io/socket.io.js"></script> <!-- GET endpoint exposed when socket.io imported through server -->
-        <script>
-
-            const randomUserId = Math.floor(Math.random() * Math.floor(1000)); // random digit between 1 and 10
-            const $events = document.getElementById('events');
-
-            const newItem = (content) => {
-                const item = document.createElement('li');
-                item.innerText = content;
-                return item;
+        <style>
+            body {
+                background-color: lightgray;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 100%;
+                margin-left: 5px;
             }
 
-            const socket = io();
+            .message-section {
+                height: 100%;
+            }
+            .message-container {
+                overflow-y: auto;
+                height: 100%;
+            }
 
-            // generic emitted event from socket.io 
-            // only triggers on load/refresh
-            socket.on('connect', () => {
-                socket.emit('user connected', randomUserId);
-            });
+        </style>
+    </head>
+    <body>
 
-            // is it possible to show a live read on the online users
+        <div id="container" class="container">
+            <div id="alert-section">
+                <p id="banner"></p>
+            </div>
 
-            socket.on('server message', (myMessage) => {
-                $events.appendChild(newItem(myMessage));
-            });
+            <div id="message-section" class="message-section">
+                <div id="message-container" class="message-container">
+                    <ul id="messages"></ul>
+                </div>
+                <div id="online-users-container">
+                    <ul id="online-users">
+                </div>
+            </div>
 
-            document.getElementById('myForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const message = document.getElementById('message').value;
-                socket.emit('chat message', `${randomUserId}: ${message}`);
-                document.getElementById('myForm').reset();
-            });
-        </script>
+            <div id="input-section">
+                <form id="myForm">
+                    Enter message: <input id="message" type="text" />
+                    <input type="submit">
+                </form>
+            </div>
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script> <!-- GET endpoint exposed when socket.io imported through server -->
+        <script src="js/client-socket-events.js"></script>
     </body>
 </html>
