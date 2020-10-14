@@ -3,27 +3,7 @@
         <title id="title">
             Minimal Socket Example
         </title>
-        <style>
-            body {
-                background-color: lightgray;
-            }
-            .container {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                height: 100%;
-                margin-left: 5px;
-            }
-
-            .message-section {
-                height: 100%;
-            }
-            .message-container {
-                overflow-y: auto;
-                height: 100%;
-            }
-
-        </style>
+        <link rel="stylesheet" href="./css/main.css" />
     </head>
     <body>
 
@@ -44,8 +24,9 @@
             <div id="input-section">
                 <form id="myForm">
                     Enter message: <input id="message" type="text" />
-                    <input type="submit">
+                    <input id="user_input" type="submit">
                 </form>
+                <p id="user-type-detection-container"></p>
             </div>
         </div>
 
