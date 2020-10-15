@@ -11,8 +11,16 @@ body {
 
 .message-section {
     height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 .message-container {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.online-users-container {
     overflow-y: auto;
     height: 100%;
 }

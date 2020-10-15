@@ -3,10 +3,12 @@ const $title = document.getElementById('title');
 $title.innerHTML = `Hello ${userId}`;
 
 const $messages = document.getElementById('messages');
+const $onlineUsers = document.getElementById('online-users');
 const $banner = document.getElementById('banner');
 
 const newItem = (content) => {
     const item = document.createElement('li');
+    item.setAttribute('id', `list-item-${content}`);
     item.innerText = content;
     return item;
 }
@@ -32,9 +34,15 @@ socket.on('banner message', (bannerMessage) => {
     }, 2500);
 })
 
-socket.on('other user typing', (payload) => {
+socket.on('other user typing', (otherUsersTyping) => {
+    let currentUsersTyping = '';
+    otherUsersTyping
+    .filter(otherUser => otherUser.user !== userId)
+    .forEach(otherUser => {
+        currentUsersTyping = currentUsersTyping + otherUser.user + ", ";
+    });
     const otherUserTypingContainer = document.getElementById('user-type-detection-container');
-    otherUserTypingContainer.textContent = payload.content && !payload.finalSubmission ? `${payload.user} is typing ...` : '';
+    otherUserTypingContainer.textContent = currentUsersTyping ? `${currentUsersTyping.substring(0, currentUsersTyping.length - 2)} is typing ...` : '';
 })
 
 document.getElementById('myForm').addEventListener('submit', function(event) {
@@ -44,8 +52,10 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
     document.getElementById('myForm').reset();
 });
 
-// observe user input
+// observe user input - still kind of buggy - user typing needs to be able to store everyone that is currently typing
 const $userInput = document.querySelector('input');
 $userInput.addEventListener('input', (event) => {
     socket.emit('user type detection', { content: event.target.value, user: userId });
 });
+
+// todo - see who's online 

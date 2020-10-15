@@ -7,6 +7,8 @@ app.use(express.static(path.join(__dirname, '')));
 
 const io = require('socket.io')(server);
 
+let currentUsersTyping = [];
+
 io.on('connect', socket => {
 
     socket.emit('serverMessage', 'message from server connection to socket');
@@ -22,13 +24,27 @@ io.on('connect', socket => {
     });
 
     socket.on('user type detection', payload => {
-        socket.broadcast.emit('other user typing', payload);
+    
+        const foundUser = currentUsersTyping.find(user => user.user === payload.user);
+        if (foundUser) {
+            currentUsersTyping = currentUsersTyping.map(currentUser => {
+                if (currentUser.user === payload.user) {
+                    currentUser = payload; // replace
+                }
+                return currentUser;
+            })
+        } else {
+            currentUsersTyping.push(payload); // add if not find (initialize)
+        }
+
+        console.log(currentUsersTyping);
+
+        socket.broadcast.emit('other user typing', currentUsersTyping.filter(currentUser => currentUser.content && !currentUser.finalSubmission ));
     });
     
     socket.on('user not typing', user => {
         socket.broadcast.emit('other user typing', user);
     });
-
 
     socket.on('user disconnect', user => {
         console.log((`${user} signed off.`));
